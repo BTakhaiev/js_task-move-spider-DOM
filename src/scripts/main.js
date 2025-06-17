@@ -4,14 +4,9 @@ const wall = document.querySelector('.wall');
 const spider = document.querySelector('.spider');
 
 wall.addEventListener('click', (e) => {
-  // Отримуємо поточні розміри та позиції стіни та павука.
-  // getBoundingClientRect() завжди дає координати відносно viewport,
-  // що спрощує розрахунки.
   const wallRect = wall.getBoundingClientRect();
   const spiderRect = spider.getBoundingClientRect();
 
-  // 1. Визначаємо цільові координати кліку ВІДНОСНО СТІНИ.
-  // Це буде місце, куди ми хочемо перемістити ЦЕНТР павука.
   const targetXInWall = e.clientX - wallRect.left;
   const targetYInWall = e.clientY - wallRect.top;
 
