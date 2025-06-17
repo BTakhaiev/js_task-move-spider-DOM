@@ -2,16 +2,30 @@
 
 const wall = document.querySelector('.wall');
 const spider = document.querySelector('.spider');
-const wallRect = wall.getBoundingClientRect();
-const initialSpiderX = spider.offsetLeft + spider.offsetWidth / 2;
-const initialSpiderY = spider.offsetTop + spider.offsetHeight / 2;
 
 wall.addEventListener('click', (e) => {
-  const xInWall = e.clientX - wallRect.left;
-  const yInWall = e.clientY - wallRect.top;
+  // Отримуємо поточні розміри та позиції стіни та павука.
+  // getBoundingClientRect() завжди дає координати відносно viewport,
+  // що спрощує розрахунки.
+  const wallRect = wall.getBoundingClientRect();
+  const spiderRect = spider.getBoundingClientRect();
 
-  const translateX = xInWall - initialSpiderX;
-  const translateY = yInWall - initialSpiderY;
+  // 1. Визначаємо цільові координати кліку ВІДНОСНО СТІНИ.
+  // Це буде місце, куди ми хочемо перемістити ЦЕНТР павука.
+  const targetXInWall = e.clientX - wallRect.left;
+  const targetYInWall = e.clientY - wallRect.top;
 
-  spider.style.transform = `translate(${translateX}px, ${translateY}px)`;
+  const currentX = spiderRect.left - wallRect.left + spiderRect.width / 2;
+  const currentY = spiderRect.top - wallRect.top + spiderRect.height / 2;
+
+  const translateX = targetXInWall - currentX;
+  const translateY = targetYInWall - currentY;
+
+  const currentTransform = window.getComputedStyle(spider).transform;
+  const currentMatrix = new DOMMatrix(currentTransform);
+
+  const newTranslateX = currentMatrix.e + translateX;
+  const newTranslateY = currentMatrix.f + translateY;
+
+  spider.style.transform = `translate(${newTranslateX}px, ${newTranslateY}px)`;
 });
